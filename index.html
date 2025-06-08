@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Perpustakaan Online - Buku Diantar ke Rumah Anda</title>
   <style>
-    /* Root and variables */
     :root {
       --color-bg: #ffffff;
       --color-primary: #111827;
@@ -19,14 +18,12 @@
       --max-width: 1200px;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-      /* Pastel colors for gradient and shapes */
-      --pastel1: #ffe3e3; /* soft peach */
-      --pastel2: #e0f2fe; /* light blue */
-      --pastel3: #d8f7e8; /* mint */
-      --pastel4: #f3e8ff; /* lavender */
+      --pastel1: #ffe3e3;
+      --pastel2: #e0f2fe;
+      --pastel3: #d8f7e8;
+      --pastel4: #f3e8ff;
     }
 
-    /* Background gradient and decorative book shapes */
     body {
       margin: 0;
       font-family: var(--font-sans);
@@ -40,7 +37,6 @@
       min-height: 100vh;
     }
 
-    /* Decorative book shapes as SVG backgrounds */
     body::before,
     body::after {
       content: "";
@@ -50,7 +46,6 @@
       opacity: 0.1;
       filter: drop-shadow(0 0 1px rgba(0,0,0,0.05));
     }
-    /* large book shape top-left */
     body::before {
       top: -100px;
       left: -100px;
@@ -59,7 +54,6 @@
       background: url('data:image/svg+xml;utf8,<svg width="300" height="300" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 4h40a4 4 0 0 1 4 4v44a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z" stroke="%232563eb" stroke-width="3" fill="%23d8f7e8"/><line x1="12" y1="12" x2="48" y2="12" stroke="%232563eb" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="24" x2="48" y2="24" stroke="%232563eb" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="36" x2="48" y2="36" stroke="%232563eb" stroke-width="2" stroke-linecap="round"/></svg>') no-repeat center/contain;
       border-radius: var(--radius);
     }
-    /* medium book shape bottom-right */
     body::after {
       bottom: -80px;
       right: -80px;
@@ -69,7 +63,6 @@
       border-radius: var(--radius);
     }
 
-    /* Allow layering of content above background shapes */
     main, header, footer {
       position: relative;
       z-index: 1;
@@ -103,20 +96,20 @@
       border-bottom: 1px solid #e5e7eb;
       z-index: 999;
       box-shadow: 0 2px 4px var(--color-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 64px;
+      gap: 1rem;
+    }
+    .logo-text {
+      font-weight: 800;
+      font-size: 1.3rem;
+      user-select: none;
+      color: var(--color-primary);
     }
     nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 64px;
-    }
-    .logo {
-      font-weight: 700;
-      font-size: 1.25rem;
-      color: var(--color-primary);
-      letter-spacing: 1px;
-    }
-    .nav-links {
       display: flex;
       gap: 2rem;
       font-weight: 600;
@@ -124,11 +117,11 @@
       color: var(--color-secondary);
       align-items: center;
     }
-    .nav-links a {
+    nav a {
       padding: 0.5rem 0;
       position: relative;
     }
-    .nav-links a::after {
+    nav a::after {
       content: "";
       position: absolute;
       bottom: -4px;
@@ -139,8 +132,8 @@
       transition: width var(--transition-speed);
       border-radius: 1px;
     }
-    .nav-links a:hover::after,
-    .nav-links a:focus::after {
+    nav a:hover::after,
+    nav a:focus::after {
       width: 100%;
     }
     .btn-primary {
@@ -183,18 +176,25 @@
     }
 
     .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
       padding-bottom: 5rem;
+      flex-wrap: wrap;
     }
     .feature-card {
       background: var(--color-card-bg);
-      padding: 2rem;
+      padding: 2rem 1.75rem;
       border-radius: var(--radius);
       box-shadow: 0 4px 8px var(--color-shadow);
       text-align: center;
       transition: transform var(--transition-speed);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1 1 280px;
+      max-width: 320px;
+      gap: 1rem;
     }
     .feature-card:hover,
     .feature-card:focus-within {
@@ -204,17 +204,60 @@
     }
     .feature-icon {
       font-size: 3rem;
-      margin-bottom: 1rem;
       color: var(--color-accent);
     }
     .feature-title {
       font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      color: var(--color-primary);
     }
     .feature-desc {
       color: var(--color-secondary);
       font-size: 1rem;
+      margin-bottom: 0.5rem;
+      max-width: 280px;
+    }
+
+    /* Delivery destination selector inside feature card */
+    .delivery-select {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      width: 100%;
+      max-width: 320px;
+    }
+    .delivery-select label {
+      font-weight: 700;
+      font-size: 1rem;
+      text-align: center;
+    }
+    .delivery-select select {
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--color-secondary);
+      transition: border-color var(--transition-speed);
+      font-family: var(--font-sans);
+      cursor: pointer;
+      width: 100%;
+      max-width: 280px;
+    }
+    .delivery-select select:hover,
+    .delivery-select select:focus {
+      border-color: var(--color-accent);
+      outline: none;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+    .shipping-cost {
+      color: var(--color-accent);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-top: 0.25rem;
+      user-select: none;
     }
 
     .catalog {
@@ -225,6 +268,39 @@
       font-size: 2rem;
       margin-bottom: 2rem;
       text-align: center;
+    }
+    .catalog-select {
+      max-width: 280px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    .catalog-select label {
+      font-weight: 700;
+      font-size: 1rem;
+      text-align: center;
+    }
+    .catalog-select select {
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--color-secondary);
+      transition: border-color var(--transition-speed);
+      font-family: var(--font-sans);
+      cursor: pointer;
+      width: 100%;
+      max-width: 280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .catalog-select select:hover,
+    .catalog-select select:focus {
+      border-color: var(--color-accent);
+      outline: none;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
     }
     .book-grid {
       display: grid;
@@ -331,6 +407,36 @@
       outline: none;
     }
 
+    /* Return options */
+    .return-options {
+      max-width: 280px;
+      margin: 1rem auto 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .return-options button {
+      flex: 1;
+      padding: 0.5rem 0;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--color-secondary);
+      background: white;
+      color: var(--color-secondary);
+      cursor: pointer;
+      transition: all var(--transition-speed);
+    }
+    .return-options button.active,
+    .return-options button:hover,
+    .return-options button:focus {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: var(--color-card-bg);
+      outline: none;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+
     footer {
       background: #f3f4f6;
       padding: 2rem 1rem;
@@ -344,157 +450,38 @@
       .hero h1 {
         font-size: 2.5rem;
       }
-      .nav-links {
+      nav {
         gap: 1rem;
       }
       .btn-primary {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
       }
+      .features {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .feature-desc, .delivery-select, .catalog-select, .return-options {
+        max-width: 100%;
+      }
     }
-
-    /* Accessibility & Utility */
-    .sr-only {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      padding: 0 !important;
-      margin: -1px !important;
-      overflow: hidden !important;
-      clip: rect(0, 0, 0, 0) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-    }
-
-    /* Sign-in page styles */
-    #login-section {
-      display: none;
-      min-height: 100vh;
-      padding: 6rem 1rem 3rem;
-      background: transparent;
-      display: flex;
-      justify-content: center;
-      align-items: start;
-      padding-top: 6rem;
-      padding-bottom: 3rem;
-    }
-    #login-section.active {
-      display: flex;
-    }
-    #login-container {
-      background: var(--color-card-bg);
-      padding: 2.5rem 3rem;
-      border-radius: var(--radius);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
-      max-width: 420px;
-      width: 100%;
-    }
-    #login-container h2 {
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: var(--color-primary);
-      text-align: center;
-    }
-    #login-tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      gap: 2rem;
-      user-select: none;
-    }
-    #login-tabs button {
-      background: none;
-      border: none;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      padding-bottom: 0.25rem;
-      border-bottom: 3px solid transparent;
-      color: var(--color-secondary);
-      transition: color var(--transition-speed), border-color var(--transition-speed);
-    }
-    #login-tabs button.active {
-      color: var(--color-primary);
-      border-color: var(--color-accent);
-      font-weight: 700;
-    }
-    form#signin-form,
-    form#signup-form {
-      display: none;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-    form.active {
-      display: flex;
-    }
-    form label {
-      font-weight: 600;
-      color: var(--color-primary);
-      margin-bottom: 0.3rem;
-      display: block;
-    }
-    form input {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: 1.5px solid #d1d5db;
-      border-radius: var(--radius);
-      outline-offset: 2px;
-      transition: border-color var(--transition-speed);
-      font-family: var(--font-sans);
-    }
-    form input:focus {
-      border-color: var(--color-accent);
-      box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
-      outline: none;
-    }
-    form button[type="submit"] {
-      background: var(--color-accent);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius);
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: background-color var(--transition-speed);
-      margin-top: 0.5rem;
-    }
-    form button[type="submit"]:hover,
-    form button[type="submit"]:focus {
-      background: var(--color-accent-hover);
-      outline: none;
-    }
-    .error-message {
-      color: #dc2626;
-      font-size: 0.9rem;
-      margin-top: -0.75rem;
-      margin-bottom: 0.75rem;
-      display: none;
-    }
-    .success-message {
-      color: var(--color-accent);
-      font-weight: 600;
-      text-align: center;
-      margin-top: 1rem;
-    }
-
   </style>
 </head>
 <body>
   <header>
-    <nav class="container" aria-label="Navigasi utama">
-      <div class="logo" tabindex="0">PerpustakaanOnline</div>
-      <div class="nav-links">
+    <div class="container">
+      <div class="logo-text" tabindex="0">Universitas Mulawarman</div>
+      <nav aria-label="Navigasi utama">
         <a href="#features">Fitur</a>
         <a href="#catalog">Katalog</a>
         <a href="#order">Pesan Buku</a>
         <a href="#" id="nav-login-link">Login</a>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section class="hero container" role="banner" aria-labelledby="hero-title">
+    <section class="hero container" role="banner" aria-labelledby="hero-title" style="margin-top:1.5rem;">
       <h1 id="hero-title">Temukan, Pinjam, dan Buku Diantar ke Rumah Anda</h1>
       <p>Layanan perpustakaan online dengan pengantaran buku via kurir yang mudah dan cepat. Jelajahi koleksi kami dan pesan sekarang juga!</p>
       <a href="#order" class="btn-primary">Pesan Buku</a>
@@ -502,48 +489,83 @@
 
     <section class="features container" id="features" aria-labelledby="features-title">
       <h2 id="features-title" class="sr-only">Fitur</h2>
-      <article class="feature-card" tabindex="0">
-        <div class="feature-icon" aria-hidden="true">📚</div>
-        <h3 class="feature-title">Koleksi Lengkap</h3>
-        <p class="feature-desc">Ribuan judul dari berbagai genre — klasik, terbaru, hingga best seller.</p>
-      </article>
-      <article class="feature-card" tabindex="0">
+
+      <article class="feature-card" tabindex="0" aria-labelledby="feature2-title">
         <div class="feature-icon" aria-hidden="true">🚚</div>
-        <h3 class="feature-title">Pengantaran Cepat</h3>
-        <p class="feature-desc">Layanan kurir terpercaya mengantarkan buku langsung ke depan pintu rumah Anda.</p>
+        <h3 class="feature-title" id="feature2-title">Pengantaran Cepat</h3>
+        <p class="feature-desc">
+          Pilih tujuan pengantaran Anda, baik ke Fakultas atau Ruang Kelas, dengan ongkos kirim mulai dari:
+        </p>
+        <div class="delivery-select" aria-label="Pilih tujuan pengantaran">
+          <label for="delivery-destination">Tujuan Pengantaran</label>
+          <select id="delivery-destination" name="delivery-destination" aria-describedby="shipping-cost" aria-required="true">
+            <optgroup label="Fakultas">
+              <option value="ekonomi-bisnis">Ekonomi dan Bisnis</option>
+              <option value="kehutanan">Kehutanan</option>
+              <option value="kedokteran">Kedokteran</option>
+              <option value="ilmu-budaya">Ilmu Budaya</option>
+              <option value="lainnya">Lainnya</option>
+            </optgroup>
+            <optgroup label="Ruang Kelas">
+              <option value="kelas-101">Ruang Kelas 101</option>
+              <option value="kelas-102">Ruang Kelas 102</option>
+              <option value="kelas-201">Ruang Kelas 201</option>
+              <option value="kelas-202">Ruang Kelas 202</option>
+              <option value="lainnya-kelas">Lainnya</option>
+            </optgroup>
+          </select>
+          <div id="shipping-cost" class="shipping-cost" aria-live="polite" aria-atomic="true">Rp2.000 paling murah</div>
+        </div>
       </article>
-      <article class="feature-card" tabindex="0">
+
+      <article class="feature-card" tabindex="0" aria-labelledby="feature3-title">
         <div class="feature-icon" aria-hidden="true">🔄</div>
-        <h3 class="feature-title">Pengembalian Mudah</h3>
-        <p class="feature-desc">Pengembalian tanpa ribet dengan penjemputan yang fleksibel sesuai jadwal Anda.</p>
+        <h3 class="feature-title" id="feature3-title">Pengembalian Mudah</h3>
+        <p class="feature-desc">Pilih apakah ingin Perpanjang peminjaman atau Beli buku setelah masa pinjam selesai.</p>
+        <div class="return-options" role="radiogroup" aria-labelledby="feature3-title">
+          <button type="button" class="active" role="radio" aria-checked="true" tabindex="0">Perpanjang</button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1">Beli</button>
+        </div>
       </article>
     </section>
 
     <section class="catalog container" id="catalog" aria-labelledby="catalog-title">
       <h2 id="catalog-title">Buku Pilihan</h2>
-      <div class="book-grid">
-        <article class="book-card" tabindex="0" aria-label="Buku: Pengantar Akuntansi">
+      <div class="catalog-select" aria-label="Pilih kategori koleksi">
+        <label for="category-select">Kategori Koleksi</label>
+        <select id="category-select" name="category-select" aria-required="false">
+          <option value="" selected>Semua Kategori</option>
+          <option value="medis">Medis</option>
+          <option value="ekonomi">Ekonomi</option>
+          <option value="pendidikan">Pendidikan</option>
+          <option value="keuangan">Keuangan</option>
+          <option value="perikanan">Perikanan</option>
+          <option value="lainnya">Lainnya</option>
+        </select>
+      </div>
+      <div class="book-grid" id="book-grid">
+        <article class="book-card" tabindex="0" aria-label="Buku: Pengantar Akuntansi" data-category="ekonomi">
           <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Pengantar Akuntansi" class="book-cover" />
           <div class="book-info">
             <h3 class="book-title">Pengantar Akuntansi</h3>
             <p class="book-author">Penulis: Sutrisno</p>
           </div>
         </article>
-        <article class="book-card" tabindex="0" aria-label="Buku: Manajemen Keuangan">
+        <article class="book-card" tabindex="0" aria-label="Buku: Manajemen Keuangan" data-category="keuangan">
           <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Manajemen Keuangan" class="book-cover" />
           <div class="book-info">
             <h3 class="book-title">Manajemen Keuangan</h3>
             <p class="book-author">Penulis: Rina Wijaya</p>
           </div>
         </article>
-        <article class="book-card" tabindex="0" aria-label="Buku: Hukum Bisnis">
-          <img src="https://images.unsplash.com/photo-1523473827535-2acab98b8e53?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Hukum Bisnis" class="book-cover" />
+        <article class="book-card" tabindex="0" aria-label="Buku: Buku Medis" data-category="medis">
+          <img src="https://images.unsplash.com/photo-1581090700227-5b563a80d50b?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku medis" class="book-cover" />
           <div class="book-info">
-            <h3 class="book-title">Hukum Bisnis</h3>
-            <p class="book-author">Penulis: Andi Saputra</p>
+            <h3 class="book-title">Buku Medis</h3>
+            <p class="book-author">Penulis: Dr. Sari</p>
           </div>
         </article>
-        <article class="book-card" tabindex="0" aria-label="Buku: Buku Ekonomi Lainnya">
+        <article class="book-card" tabindex="0" aria-label="Buku: Buku Ekonomi Lainnya" data-category="ekonomi">
           <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Buku Ekonomi Lainnya" class="book-cover" />
           <div class="book-info">
             <h3 class="book-title">Buku Ekonomi Lainnya</h3>
@@ -572,7 +594,7 @@
           <option value="" disabled selected>Pilih buku</option>
           <option>Pengantar Akuntansi</option>
           <option>Manajemen Keuangan</option>
-          <option>Hukum Bisnis</option>
+          <option>Buku Medis</option>
           <option>Buku Ekonomi Lainnya</option>
         </select>
         <span id="bookTitle-error" class="error" aria-live="polite" style="color:#dc2626;display:none;">Mohon pilih buku.</span>
@@ -585,53 +607,6 @@
       </form>
       <div id="form-message" role="alert" aria-live="polite" style="margin-top: 1rem; font-weight: 600;"></div>
     </section>
-
-    <!-- Login / Sign-up section -->
-    <section id="login-section" aria-labelledby="login-title" role="region" aria-hidden="true">
-      <div id="login-container" role="form" aria-live="polite" aria-atomic="true">
-        <h2 id="login-title">Masuk ke Perpustakaan Online</h2>
-        <div id="login-tabs" role="tablist" aria-label="Pilih Masuk atau Buat Akun">
-          <button role="tab" aria-selected="true" aria-controls="signin-form" id="tab-signin" class="active" tabindex="0">Masuk</button>
-          <button role="tab" aria-selected="false" aria-controls="signup-form" id="tab-signup" tabindex="-1">Buat Akun</button>
-        </div>
-
-        <!-- Sign In Form -->
-        <form id="signin-form" class="active" novalidate aria-labelledby="login-title" aria-hidden="false">
-          <label for="signin-email">Email</label>
-          <input type="email" id="signin-email" name="signin-email" required aria-required="true" aria-describedby="signin-email-error" />
-          <span id="signin-email-error" class="error-message" aria-live="polite"></span>
-
-          <label for="signin-password">Kata Sandi</label>
-          <input type="password" id="signin-password" name="signin-password" required aria-required="true" minlength="6" aria-describedby="signin-password-error" />
-          <span id="signin-password-error" class="error-message" aria-live="polite"></span>
-
-          <button type="submit" aria-label="Masuk ke akun">Masuk</button>
-          <div id="signin-message" class="success-message" role="alert"></div>
-        </form>
-
-        <!-- Sign Up Form -->
-        <form id="signup-form" novalidate aria-labelledby="login-title" aria-hidden="true">
-          <label for="signup-name">Nama Lengkap</label>
-          <input type="text" id="signup-name" name="signup-name" required minlength="2" aria-required="true" aria-describedby="signup-name-error" />
-          <span id="signup-name-error" class="error-message" aria-live="polite"></span>
-
-          <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" name="signup-email" required aria-required="true" aria-describedby="signup-email-error" />
-          <span id="signup-email-error" class="error-message" aria-live="polite"></span>
-
-          <label for="signup-password">Kata Sandi</label>
-          <input type="password" id="signup-password" name="signup-password" required minlength="6" aria-required="true" aria-describedby="signup-password-error" />
-          <span id="signup-password-error" class="error-message" aria-live="polite"></span>
-
-          <label for="signup-password-confirm">Konfirmasi Kata Sandi</label>
-          <input type="password" id="signup-password-confirm" name="signup-password-confirm" required minlength="6" aria-required="true" aria-describedby="signup-password-confirm-error" />
-          <span id="signup-password-confirm-error" class="error-message" aria-live="polite"></span>
-
-          <button type="submit" aria-label="Buat akun mahasiswa">Buat Akun</button>
-          <div id="signup-message" class="success-message" role="alert"></div>
-        </form>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -639,7 +614,6 @@
   </footer>
 
   <script>
-    // Navigation "Login" link toggles the login section and hides main content scroll
     const navLoginLink = document.getElementById('nav-login-link');
     const loginSection = document.getElementById('login-section');
     const mainSections = document.querySelector('main > :not(#login-section)');
@@ -678,7 +652,6 @@
       navLoginLink.focus();
     }
 
-    // Tabs for sign in / sign up forms
     const tabSignin = document.getElementById('tab-signin');
     const tabSignup = document.getElementById('tab-signup');
     const signinForm = document.getElementById('signin-form');
@@ -729,7 +702,6 @@
       if(successMessage) successMessage.textContent = '';
     }
 
-    // Form Input references
     const signinEmailInput = document.getElementById('signin-email');
     const signinPasswordInput = document.getElementById('signin-password');
     const signinEmailError = document.getElementById('signin-email-error');
@@ -746,12 +718,10 @@
     const signupPasswordConfirmError = document.getElementById('signup-password-confirm-error');
     const signupMessage = document.getElementById('signup-message');
 
-    // Email validation function
     function validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Sign-in form submit
     signinForm.addEventListener('submit', (e) => {
       e.preventDefault();
       signinEmailError.style.display = 'none';
@@ -771,13 +741,11 @@
       }
       if(!valid) return;
 
-      // Simulate successful sign-in (replace with real backend)
       signinMessage.style.color = 'var(--color-accent)';
       signinMessage.textContent = 'Berhasil masuk! Selamat datang kembali.';
       signinForm.reset();
     });
 
-    // Sign-up form submit
     signupForm.addEventListener('submit', (e) => {
       e.preventDefault();
       [signupNameError, signupEmailError, signupPasswordError, signupPasswordConfirmError].forEach(el => {
@@ -810,15 +778,40 @@
       }
       if(!valid) return;
 
-      // Simulate successful sign-up (replace with real backend)
       signupMessage.style.color = 'var(--color-accent)';
       signupMessage.textContent = 'Akun berhasil dibuat! Silakan masuk.';
       signupForm.reset();
 
-      // Switch to sign-in tab
       switchTab('signin');
+    });
+
+    const categorySelect = document.getElementById('category-select');
+    const bookGrid = document.getElementById('book-grid');
+    categorySelect.addEventListener('change', () => {
+      const selected = categorySelect.value;
+      const books = bookGrid.querySelectorAll('.book-card');
+      books.forEach(book => {
+        if (selected === '' || book.dataset.category === selected) {
+          book.style.display = '';
+        } else {
+          book.style.display = 'none';
+        }
+      });
+    });
+
+    const returnOptions = document.querySelectorAll('.return-options button');
+    returnOptions.forEach(button => {
+      button.addEventListener('click', () => {
+        returnOptions.forEach(btn => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-checked', 'false');
+          btn.setAttribute('tabindex', '-1');
+        });
+        button.classList.add('active');
+        button.setAttribute('aria-checked', 'true');
+        button.setAttribute('tabindex', '0');
+      });
     });
   </script>
 </body>
 </html>
-
