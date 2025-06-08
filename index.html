@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perpustakaan Online - Buku Diantar ke Rumah Anda</title>
+  <style>
+    /* Root and variables */
+    :root {
+      --color-bg: #ffffff;
+      --color-primary: #111827;
+      --color-secondary: #6b7280;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-card-bg: #f9fafb;
+      --color-shadow: rgba(0, 0, 0, 0.05);
+      --radius: 0.75rem;
+      --transition-speed: 0.3s;
+      --max-width: 1200px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      /* Pastel colors for gradient and shapes */
+      --pastel1: #ffe3e3; /* soft peach */
+      --pastel2: #e0f2fe; /* light blue */
+      --pastel3: #d8f7e8; /* mint */
+      --pastel4: #f3e8ff; /* lavender */
+    }
+
+    /* Background gradient and decorative book shapes */
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, var(--pastel3), var(--pastel4));
+      color: var(--color-primary);
+      line-height: 1.6;
+      font-size: 18px;
+      scroll-behavior: smooth;
+      position: relative;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Decorative book shapes as SVG backgrounds */
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.1;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,0.05));
+    }
+    /* large book shape top-left */
+    body::before {
+      top: -100px;
+      left: -100px;
+      width: 300px;
+      height: 300px;
+      background: url('data:image/svg+xml;utf8,<svg width="300" height="300" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 4h40a4 4 0 0 1 4 4v44a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z" stroke="%232563eb" stroke-width="3" fill="%23d8f7e8"/><line x1="12" y1="12" x2="48" y2="12" stroke="%232563eb" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="24" x2="48" y2="24" stroke="%232563eb" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="36" x2="48" y2="36" stroke="%232563eb" stroke-width="2" stroke-linecap="round"/></svg>') no-repeat center/contain;
+      border-radius: var(--radius);
+    }
+    /* medium book shape bottom-right */
+    body::after {
+      bottom: -80px;
+      right: -80px;
+      width: 220px;
+      height: 220px;
+      background: url('data:image/svg+xml;utf8,<svg width="220" height="220" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="48" height="48" stroke="%231d4ed8" stroke-width="3" rx="5" ry="5" fill="%23f3e8ff"/><line x1="14" y1="22" x2="50" y2="22" stroke="%231d4ed8" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="34" x2="50" y2="34" stroke="%231d4ed8" stroke-width="2" stroke-linecap="round"/></svg>') no-repeat center/contain;
+      border-radius: var(--radius);
+    }
+
+    /* Allow layering of content above background shapes */
+    main, header, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    a:hover, a:focus {
+      color: var(--color-accent-hover);
+      outline: none;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      z-index: 999;
+      box-shadow: 0 2px 4px var(--color-shadow);
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--color-primary);
+      letter-spacing: 1px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-secondary);
+      align-items: center;
+    }
+    .nav-links a {
+      padding: 0.5rem 0;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--color-accent);
+      transition: width var(--transition-speed);
+      border-radius: 1px;
+    }
+    .nav-links a:hover::after,
+    .nav-links a:focus::after {
+      width: 100%;
+    }
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background: var(--color-accent-hover);
+      outline: none;
+    }
+
+    .hero {
+      padding: 6rem 1rem 5rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-weight: 800;
+      font-size: 3.5rem;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.1;
+    }
+    .hero p {
+      font-weight: 500;
+      font-size: 1.25rem;
+      color: var(--color-secondary);
+      margin: 1rem auto 2rem;
+      max-width: 480px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding-bottom: 5rem;
+    }
+    .feature-card {
+      background: var(--color-card-bg);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 8px var(--color-shadow);
+      text-align: center;
+      transition: transform var(--transition-speed);
+    }
+    .feature-card:hover,
+    .feature-card:focus-within {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+      outline: none;
+    }
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--color-accent);
+    }
+    .feature-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .feature-desc {
+      color: var(--color-secondary);
+      font-size: 1rem;
+    }
+
+    .catalog {
+      padding-bottom: 6rem;
+    }
+    .catalog h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+    }
+    .book-card {
+      background: var(--color-card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--color-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition-speed);
+      cursor: pointer;
+    }
+    .book-card:hover,
+    .book-card:focus-within {
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+      outline: none;
+    }
+    .book-cover {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .book-info {
+      padding: 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .book-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      color: var(--color-primary);
+    }
+    .book-author {
+      color: var(--color-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      font-style: italic;
+    }
+
+    .order-section {
+      background: var(--color-card-bg);
+      padding: 3rem 1rem 4rem;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 20px var(--color-shadow);
+      max-width: 600px;
+      margin: 0 auto 6rem;
+    }
+    .order-section h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    label {
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    input, select, textarea {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: var(--radius);
+      outline-offset: 2px;
+      transition: border-color var(--transition-speed);
+      font-family: var(--font-sans);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+      outline: none;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    button[type="submit"] {
+      background: var(--color-accent);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: background-color var(--transition-speed);
+    }
+    button[type="submit"]:hover,
+    button[type="submit"]:focus {
+      background: var(--color-accent-hover);
+      outline: none;
+    }
+
+    footer {
+      background: #f3f4f6;
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--color-secondary);
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .nav-links {
+        gap: 1rem;
+      }
+      .btn-primary {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Accessibility & Utility */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* Sign-in page styles */
+    #login-section {
+      display: none;
+      min-height: 100vh;
+      padding: 6rem 1rem 3rem;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      padding-top: 6rem;
+      padding-bottom: 3rem;
+    }
+    #login-section.active {
+      display: flex;
+    }
+    #login-container {
+      background: var(--color-card-bg);
+      padding: 2.5rem 3rem;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+      max-width: 420px;
+      width: 100%;
+    }
+    #login-container h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-primary);
+      text-align: center;
+    }
+    #login-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      gap: 2rem;
+      user-select: none;
+    }
+    #login-tabs button {
+      background: none;
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      padding-bottom: 0.25rem;
+      border-bottom: 3px solid transparent;
+      color: var(--color-secondary);
+      transition: color var(--transition-speed), border-color var(--transition-speed);
+    }
+    #login-tabs button.active {
+      color: var(--color-primary);
+      border-color: var(--color-accent);
+      font-weight: 700;
+    }
+    form#signin-form,
+    form#signup-form {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    form.active {
+      display: flex;
+    }
+    form label {
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    form input {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: var(--radius);
+      outline-offset: 2px;
+      transition: border-color var(--transition-speed);
+      font-family: var(--font-sans);
+    }
+    form input:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+      outline: none;
+    }
+    form button[type="submit"] {
+      background: var(--color-accent);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: background-color var(--transition-speed);
+      margin-top: 0.5rem;
+    }
+    form button[type="submit"]:hover,
+    form button[type="submit"]:focus {
+      background: var(--color-accent-hover);
+      outline: none;
+    }
+    .error-message {
+      color: #dc2626;
+      font-size: 0.9rem;
+      margin-top: -0.75rem;
+      margin-bottom: 0.75rem;
+      display: none;
+    }
+    .success-message {
+      color: var(--color-accent);
+      font-weight: 600;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="container" aria-label="Navigasi utama">
+      <div class="logo" tabindex="0">PerpustakaanOnline</div>
+      <div class="nav-links">
+        <a href="#features">Fitur</a>
+        <a href="#catalog">Katalog</a>
+        <a href="#order">Pesan Buku</a>
+        <a href="#" id="nav-login-link">Login</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container" role="banner" aria-labelledby="hero-title">
+      <h1 id="hero-title">Temukan, Pinjam, dan Buku Diantar ke Rumah Anda</h1>
+      <p>Layanan perpustakaan online dengan pengantaran buku via kurir yang mudah dan cepat. Jelajahi koleksi kami dan pesan sekarang juga!</p>
+      <a href="#order" class="btn-primary">Pesan Buku</a>
+    </section>
+
+    <section class="features container" id="features" aria-labelledby="features-title">
+      <h2 id="features-title" class="sr-only">Fitur</h2>
+      <article class="feature-card" tabindex="0">
+        <div class="feature-icon" aria-hidden="true">📚</div>
+        <h3 class="feature-title">Koleksi Lengkap</h3>
+        <p class="feature-desc">Ribuan judul dari berbagai genre — klasik, terbaru, hingga best seller.</p>
+      </article>
+      <article class="feature-card" tabindex="0">
+        <div class="feature-icon" aria-hidden="true">🚚</div>
+        <h3 class="feature-title">Pengantaran Cepat</h3>
+        <p class="feature-desc">Layanan kurir terpercaya mengantarkan buku langsung ke depan pintu rumah Anda.</p>
+      </article>
+      <article class="feature-card" tabindex="0">
+        <div class="feature-icon" aria-hidden="true">🔄</div>
+        <h3 class="feature-title">Pengembalian Mudah</h3>
+        <p class="feature-desc">Pengembalian tanpa ribet dengan penjemputan yang fleksibel sesuai jadwal Anda.</p>
+      </article>
+    </section>
+
+    <section class="catalog container" id="catalog" aria-labelledby="catalog-title">
+      <h2 id="catalog-title">Buku Pilihan</h2>
+      <div class="book-grid">
+        <article class="book-card" tabindex="0" aria-label="Buku: Pengantar Akuntansi">
+          <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Pengantar Akuntansi" class="book-cover" />
+          <div class="book-info">
+            <h3 class="book-title">Pengantar Akuntansi</h3>
+            <p class="book-author">Penulis: Sutrisno</p>
+          </div>
+        </article>
+        <article class="book-card" tabindex="0" aria-label="Buku: Manajemen Keuangan">
+          <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Manajemen Keuangan" class="book-cover" />
+          <div class="book-info">
+            <h3 class="book-title">Manajemen Keuangan</h3>
+            <p class="book-author">Penulis: Rina Wijaya</p>
+          </div>
+        </article>
+        <article class="book-card" tabindex="0" aria-label="Buku: Hukum Bisnis">
+          <img src="https://images.unsplash.com/photo-1523473827535-2acab98b8e53?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Hukum Bisnis" class="book-cover" />
+          <div class="book-info">
+            <h3 class="book-title">Hukum Bisnis</h3>
+            <p class="book-author">Penulis: Andi Saputra</p>
+          </div>
+        </article>
+        <article class="book-card" tabindex="0" aria-label="Buku: Buku Ekonomi Lainnya">
+          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&amp;fit=crop&amp;w=400&amp;h=533&amp;q=80" alt="Sampul buku Buku Ekonomi Lainnya" class="book-cover" />
+          <div class="book-info">
+            <h3 class="book-title">Buku Ekonomi Lainnya</h3>
+            <p class="book-author">Berbagai Penulis</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="order-section container" id="order" aria-labelledby="order-title">
+      <h2 id="order-title">Pesan Pengantaran Buku</h2>
+      <form id="order-form" aria-describedby="order-desc" novalidate>
+        <p id="order-desc" style="color: var(--color-secondary); margin-bottom: 1rem;">
+          Lengkapi formulir berikut untuk memesan pengantaran buku via kurir. Kami akan menghubungi Anda untuk konfirmasi.
+        </p>
+        <label for="fullName">Nama Lengkap *</label>
+        <input type="text" id="fullName" name="fullName" required minlength="2" aria-required="true" aria-describedby="fullName-error" />
+        <span id="fullName-error" class="error" aria-live="polite" style="color:#dc2626;display:none;">Mohon masukkan nama lengkap Anda.</span>
+
+        <label for="email">Alamat Email *</label>
+        <input type="email" id="email" name="email" required aria-required="true" aria-describedby="email-error" />
+        <span id="email-error" class="error" aria-live="polite" style="color:#dc2626;display:none;">Mohon masukkan alamat email valid.</span>
+
+        <label for="bookTitle">Judul Buku *</label>
+        <select id="bookTitle" name="bookTitle" required aria-required="true" aria-describedby="bookTitle-error">
+          <option value="" disabled selected>Pilih buku</option>
+          <option>Pengantar Akuntansi</option>
+          <option>Manajemen Keuangan</option>
+          <option>Hukum Bisnis</option>
+          <option>Buku Ekonomi Lainnya</option>
+        </select>
+        <span id="bookTitle-error" class="error" aria-live="polite" style="color:#dc2626;display:none;">Mohon pilih buku.</span>
+
+        <label for="address">Alamat Pengantaran *</label>
+        <textarea id="address" name="address" required minlength="10" aria-required="true" aria-describedby="address-error"></textarea>
+        <span id="address-error" class="error" aria-live="polite" style="color:#dc2626;display:none;">Mohon masukkan alamat pengantaran yang valid (min 10 karakter).</span>
+
+        <button type="submit">Kirim Pesanan</button>
+      </form>
+      <div id="form-message" role="alert" aria-live="polite" style="margin-top: 1rem; font-weight: 600;"></div>
+    </section>
+
+    <!-- Login / Sign-up section -->
+    <section id="login-section" aria-labelledby="login-title" role="region" aria-hidden="true">
+      <div id="login-container" role="form" aria-live="polite" aria-atomic="true">
+        <h2 id="login-title">Masuk ke Perpustakaan Online</h2>
+        <div id="login-tabs" role="tablist" aria-label="Pilih Masuk atau Buat Akun">
+          <button role="tab" aria-selected="true" aria-controls="signin-form" id="tab-signin" class="active" tabindex="0">Masuk</button>
+          <button role="tab" aria-selected="false" aria-controls="signup-form" id="tab-signup" tabindex="-1">Buat Akun</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="active" novalidate aria-labelledby="login-title" aria-hidden="false">
+          <label for="signin-email">Email</label>
+          <input type="email" id="signin-email" name="signin-email" required aria-required="true" aria-describedby="signin-email-error" />
+          <span id="signin-email-error" class="error-message" aria-live="polite"></span>
+
+          <label for="signin-password">Kata Sandi</label>
+          <input type="password" id="signin-password" name="signin-password" required aria-required="true" minlength="6" aria-describedby="signin-password-error" />
+          <span id="signin-password-error" class="error-message" aria-live="polite"></span>
+
+          <button type="submit" aria-label="Masuk ke akun">Masuk</button>
+          <div id="signin-message" class="success-message" role="alert"></div>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" novalidate aria-labelledby="login-title" aria-hidden="true">
+          <label for="signup-name">Nama Lengkap</label>
+          <input type="text" id="signup-name" name="signup-name" required minlength="2" aria-required="true" aria-describedby="signup-name-error" />
+          <span id="signup-name-error" class="error-message" aria-live="polite"></span>
+
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" name="signup-email" required aria-required="true" aria-describedby="signup-email-error" />
+          <span id="signup-email-error" class="error-message" aria-live="polite"></span>
+
+          <label for="signup-password">Kata Sandi</label>
+          <input type="password" id="signup-password" name="signup-password" required minlength="6" aria-required="true" aria-describedby="signup-password-error" />
+          <span id="signup-password-error" class="error-message" aria-live="polite"></span>
+
+          <label for="signup-password-confirm">Konfirmasi Kata Sandi</label>
+          <input type="password" id="signup-password-confirm" name="signup-password-confirm" required minlength="6" aria-required="true" aria-describedby="signup-password-confirm-error" />
+          <span id="signup-password-confirm-error" class="error-message" aria-live="polite"></span>
+
+          <button type="submit" aria-label="Buat akun mahasiswa">Buat Akun</button>
+          <div id="signup-message" class="success-message" role="alert"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2024 PerpustakaanOnline. Semua hak dilindungi.
+  </footer>
+
+  <script>
+    // Navigation "Login" link toggles the login section and hides main content scroll
+    const navLoginLink = document.getElementById('nav-login-link');
+    const loginSection = document.getElementById('login-section');
+    const mainSections = document.querySelector('main > :not(#login-section)');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    navLoginLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      if(!loginSection.classList.contains('active')) {
+        loginSection.classList.add('active');
+        loginSection.setAttribute('aria-hidden', 'false');
+        mainSections.style.display = 'none';
+        navLinks.forEach(link => link.setAttribute('tabindex', '-1'));
+        navLoginLink.setAttribute('tabindex', '0');
+      }
+      loginSection.scrollIntoView({behavior: "smooth"});
+      signinEmailInput.focus();
+    });
+
+    loginSection.addEventListener('click', (e) => {
+      if (e.target === loginSection) {
+        closeLogin();
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && loginSection.classList.contains('active')) {
+        closeLogin();
+      }
+    });
+
+    function closeLogin() {
+      loginSection.classList.remove('active');
+      loginSection.setAttribute('aria-hidden', 'true');
+      mainSections.style.display = '';
+      navLinks.forEach(link => link.setAttribute('tabindex', '0'));
+      navLoginLink.setAttribute('tabindex', '0');
+      navLoginLink.focus();
+    }
+
+    // Tabs for sign in / sign up forms
+    const tabSignin = document.getElementById('tab-signin');
+    const tabSignup = document.getElementById('tab-signup');
+    const signinForm = document.getElementById('signin-form');
+    const signupForm = document.getElementById('signup-form');
+
+    tabSignin.addEventListener('click', () => switchTab('signin'));
+    tabSignup.addEventListener('click', () => switchTab('signup'));
+
+    function switchTab(tab) {
+      if(tab === 'signin') {
+        tabSignin.classList.add('active');
+        tabSignin.setAttribute('aria-selected', 'true');
+        tabSignin.setAttribute('tabindex', '0');
+        tabSignup.classList.remove('active');
+        tabSignup.setAttribute('aria-selected', 'false');
+        tabSignup.setAttribute('tabindex', '-1');
+        signinForm.classList.add('active');
+        signinForm.setAttribute('aria-hidden', 'false');
+        signupForm.classList.remove('active');
+        signupForm.setAttribute('aria-hidden', 'true');
+        clearFormMessages(signupForm);
+        clearFormMessages(signinForm);
+        signinEmailInput.focus();
+      } else {
+        tabSignup.classList.add('active');
+        tabSignup.setAttribute('aria-selected', 'true');
+        tabSignup.setAttribute('tabindex', '0');
+        tabSignin.classList.remove('active');
+        tabSignin.setAttribute('aria-selected', 'false');
+        tabSignin.setAttribute('tabindex', '-1');
+        signupForm.classList.add('active');
+        signupForm.setAttribute('aria-hidden', 'false');
+        signinForm.classList.remove('active');
+        signinForm.setAttribute('aria-hidden', 'true');
+        clearFormMessages(signinForm);
+        clearFormMessages(signupForm);
+        signupNameInput.focus();
+      }
+    }
+
+    function clearFormMessages(form) {
+      const errorElements = form.querySelectorAll('.error-message');
+      errorElements.forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+      });
+      const successMessage = form.querySelector('.success-message');
+      if(successMessage) successMessage.textContent = '';
+    }
+
+    // Form Input references
+    const signinEmailInput = document.getElementById('signin-email');
+    const signinPasswordInput = document.getElementById('signin-password');
+    const signinEmailError = document.getElementById('signin-email-error');
+    const signinPasswordError = document.getElementById('signin-password-error');
+    const signinMessage = document.getElementById('signin-message');
+
+    const signupNameInput = document.getElementById('signup-name');
+    const signupEmailInput = document.getElementById('signup-email');
+    const signupPasswordInput = document.getElementById('signup-password');
+    const signupPasswordConfirmInput = document.getElementById('signup-password-confirm');
+    const signupNameError = document.getElementById('signup-name-error');
+    const signupEmailError = document.getElementById('signup-email-error');
+    const signupPasswordError = document.getElementById('signup-password-error');
+    const signupPasswordConfirmError = document.getElementById('signup-password-confirm-error');
+    const signupMessage = document.getElementById('signup-message');
+
+    // Email validation function
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Sign-in form submit
+    signinForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      signinEmailError.style.display = 'none';
+      signinPasswordError.style.display = 'none';
+      signinMessage.textContent = '';
+
+      let valid = true;
+      if(!signinEmailInput.value.trim() || !validateEmail(signinEmailInput.value.trim())) {
+        signinEmailError.textContent = 'Mohon masukkan email yang valid.';
+        signinEmailError.style.display = 'block';
+        valid = false;
+      }
+      if(!signinPasswordInput.value.trim() || signinPasswordInput.value.trim().length < 6) {
+        signinPasswordError.textContent = 'Kata sandi minimal 6 karakter.';
+        signinPasswordError.style.display = 'block';
+        valid = false;
+      }
+      if(!valid) return;
+
+      // Simulate successful sign-in (replace with real backend)
+      signinMessage.style.color = 'var(--color-accent)';
+      signinMessage.textContent = 'Berhasil masuk! Selamat datang kembali.';
+      signinForm.reset();
+    });
+
+    // Sign-up form submit
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      [signupNameError, signupEmailError, signupPasswordError, signupPasswordConfirmError].forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+      });
+      signupMessage.textContent = '';
+
+      let valid = true;
+
+      if(!signupNameInput.value.trim() || signupNameInput.value.trim().length < 2) {
+        signupNameError.textContent = 'Nama lengkap minimal 2 karakter.';
+        signupNameError.style.display = 'block';
+        valid = false;
+      }
+      if(!signupEmailInput.value.trim() || !validateEmail(signupEmailInput.value.trim())) {
+        signupEmailError.textContent = 'Mohon masukkan email yang valid.';
+        signupEmailError.style.display = 'block';
+        valid = false;
+      }
+      if(!signupPasswordInput.value.trim() || signupPasswordInput.value.trim().length < 6) {
+        signupPasswordError.textContent = 'Kata sandi minimal 6 karakter.';
+        signupPasswordError.style.display = 'block';
+        valid = false;
+      }
+      if(signupPasswordConfirmInput.value.trim() !== signupPasswordInput.value.trim()) {
+        signupPasswordConfirmError.textContent = 'Konfirmasi kata sandi harus sama.';
+        signupPasswordConfirmError.style.display = 'block';
+        valid = false;
+      }
+      if(!valid) return;
+
+      // Simulate successful sign-up (replace with real backend)
+      signupMessage.style.color = 'var(--color-accent)';
+      signupMessage.textContent = 'Akun berhasil dibuat! Silakan masuk.';
+      signupForm.reset();
+
+      // Switch to sign-in tab
+      switchTab('signin');
+    });
+  </script>
+</body>
+</html>
+
